@@ -157,11 +157,27 @@ class BamCoverageTest(unittest.TestCase):
     def test_bam_coverage1(self):
         bam_fpath = os.path.join(TEST_DATA_DIR, 'seqs.bam')
         cov = BamCoverages1([bam_fpath])
-        exp = {'group1+454': 9}
-        # assert cov._calculate_coverages_in_pos('reference1', 200) == exp
         res = cov.calculate_coverage_distrib_in_region(region=('reference1',
                                                                None, None))
         assert res['group1+454'] == {9: 73}
+
+        cov = BamCoverages1([bam_fpath, bam_fpath])
+        res = cov.calculate_coverage_distrib_in_region(region=('reference1',
+                                                               None, None))
+        assert res['group1+454'] == {18: 73}
+
+    def test_bam_coverage1_samples(self):
+        bam_fpath = os.path.join(TEST_DATA_DIR, 'seqs.bam')
+        cov = BamCoverages1([bam_fpath])
+        res = cov.calculate_coverage_distrib_in_region(region=('reference1',
+                                                               None, None),
+                                                       samples=('group1+454',))
+        assert res['group1+454'] == {9: 73}
+
+        res = cov.calculate_coverage_distrib_in_region(region=('reference1',
+                                                               None, None),
+                                                       samples=('group2+454',))
+        assert res['group2+454'] == {}
 
     def test_bam_coverage2(self):
         bam_fpath = os.path.join(TEST_DATA_DIR, 'seqs.bam')
@@ -181,6 +197,11 @@ class BamCoverageTest(unittest.TestCase):
                                                                None, None))
         assert res == {'group1+454': {9: 53, 3: 20, 6: 20}}
 
+        cov = BamCoverages2([bam_fpath, bam_fpath], window=21, sampling_win_step=10)
+        res = cov.calculate_coverage_distrib_in_region(region=('reference1',
+                                                               None, None))
+        assert res == {'group1+454': {18: 53, 12: 20, 6: 20}}
+
     def test_bin_draw_cov_hist(self):
         bam_fpath = os.path.join(TEST_DATA_DIR, 'seqs.bam')
         binary = os.path.join(BAM_BIN_DIR, 'draw_coverage_hist')
@@ -199,5 +220,5 @@ class BamCoverageTest(unittest.TestCase):
         assert 'group2+454' in open(out_fhand2.name).read()
 
 if __name__ == "__main__":
-    # import sys;sys.argv = ['', 'BamCoverageTest.test_bin_draw_cov_hist']
+    import sys;sys.argv = ['', 'BamCoverageTest.test_bam_coverage1_samples']
     unittest.main()

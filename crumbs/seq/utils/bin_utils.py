@@ -38,7 +38,7 @@ def create_basic_argparse(**kwargs):
 
     parser.add_argument('-o', '--outfile', default=sys.stdout, dest=OUTFILE,
                         help='Sequence output file (default: STDOUT)',
-                        type=argparse.FileType('wt'), required=True)
+                        type=argparse.FileType('wt'))
 
     parser.add_argument('--version', action='version',
                         version=build_version_msg())

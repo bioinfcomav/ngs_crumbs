@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block nav_bar %}
-    
+
     <nav class="horizontal_nav page_nav">
         <ul>
             <li><a href="/index.html">Bioinformatics & genomics</a>
@@ -58,6 +58,7 @@
                     <li><a href="/courses/intro_bioinf/index.html">Bionformática básica</a></li>
                     <li><a href="/courses/sequence_analysis/index.html">NGS sequence analysis</a></li>
                     <li><a href="/courses/linux/index.html">Linux y Python</a></li>
+                    <li><a href="/courses/unix/index.html">Linux para Biologos</a></li>
                </ul>
         </ul>
     </nav>
@@ -70,13 +71,13 @@
                     {{ toctree() }}
                 </nav>
             {%- endif %}
-            
+
             {%- block document %}
                 {{ super() }}
             {%- endblock %}
-            
+
         {% endblock %}
-        
+
     </main>
     {%- if theme_prevnext in 'True' %}
         {%- if not pagename in theme_indexpage %}
@@ -86,15 +87,15 @@
                     <a class="prev" href="{{ prev.link|e }}" title="{{ prev.title|striptags }}">previous</a>
                     |
                 {%- endif %}
-                
+
                 {%- if prev %}
                     <!--<a class="next" href="{{ next.link|e }}">{{ next.title|striptags }}</a>-->
                     <a class="next" href="{{ next.link|e }}" title="{{ next.title|striptags }}">next</a>
                     |
                 {%- endif %}
-                
+
                 <a class="index" href="{{ theme_indexpage }}" title="Index">index</a>
-                
+
             </div>
         {%- endif %}
     {%- endif %}
