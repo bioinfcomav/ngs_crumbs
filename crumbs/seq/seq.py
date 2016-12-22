@@ -207,11 +207,13 @@ def get_annotations(seq):
     return seq.object.annotations
 
 
-def _copy_seqrecord(seqrec, seq=None, name=None, id_=None):
+def _copy_seqrecord(seqrec, seq=None, name=None, id_=None, description=None):
     'Given a seqrecord it returns a new seqrecord with seq or qual changed.'
+    if description is None:
+        description = seqrec.description
     if seq is None:
         seq = seqrec.seq
-    if id_ is  None:
+    if id_ is None:
         id_ = seqrec.id
     if name is None:
         name = seqrec.name
@@ -220,7 +222,6 @@ def _copy_seqrecord(seqrec, seq=None, name=None, id_=None):
     let_annot = {annot: v for annot, v in seqrec.letter_annotations.items()}
 
     # the rest of parameters
-    description = seqrec.description
     dbxrefs = seqrec.dbxrefs[:]
     features = seqrec.features[:]  # the features are not copied
     annotations = deepcopy(seqrec.annotations)
@@ -267,13 +268,16 @@ def _copy_seqitem(seqwrapper, seq=None, name=None):
     return seq
 
 
-def copy_seq(seqwrapper, seq=None, name=None):
+def copy_seq(seqwrapper, seq=None, name=None, description=None):
     seq_class = seqwrapper.kind
     seq_obj = seqwrapper.object
     if seq_class == SEQITEM:
+        if description is not None:
+            raise NotImplementedError("FIX ME, ADD DESCRIPTION TO SEqItem")
         seq = _copy_seqitem(seqwrapper, seq=seq, name=name)
     elif seq_class == SEQRECORD:
-        seq_obj = _copy_seqrecord(seq_obj, seq=seq, name=name, id_=name)
+        seq_obj = _copy_seqrecord(seq_obj, seq=seq, name=name, id_=name,
+                                  description=description)
         seq = SeqWrapper(kind=seqwrapper.kind, object=seq_obj,
                          file_format=seqwrapper.file_format)
     return seq
@@ -314,4 +318,3 @@ def assing_kind_to_seqs(kind, seqs, file_format):
 
 def _assign_kind_to_seq(kind, seq, file_format):
     return SeqWrapper(kind, seq, file_format)
-
