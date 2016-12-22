@@ -170,8 +170,8 @@ def map_with_tophat(index_fpath, out_dir, unpaired_fpath=None,
         stderr = NamedTemporaryFile(suffix='.stderr')
     else:
         stderr = open(log_fpath, 'w')
-    #print " ".join(cmd)
-    #return
+    # print " ".join(cmd)
+    # return
     tophat = popen(cmd, stderr=stderr, stdout=PIPE)
     tophat.communicate()
 
@@ -245,6 +245,51 @@ def map_with_bowtie2(index_fpath, paired_fpaths=None,
     return bowtie2
 
 
+def map_with_hisat2(index_fpath, paired_fpaths=None,
+                    unpaired_fpath=None, readgroup=None, threads=None,
+                    log_fpath=None, extra_params=None):
+    '''It maps with bowtie2.
+
+    paired_seqs is a list of tuples, in which each tuple are paired seqs
+    unpaired_seqs is a list of files
+    '''
+    if readgroup is None:
+        readgroup = {}
+
+    if extra_params is None:
+        extra_params = []
+
+    if paired_fpaths is None and unpaired_fpath is None:
+        raise RuntimeError('At least one file to map is required')
+
+    binary = get_binary_path('hisat2')
+    cmd = [binary, '-x', index_fpath, '-p', str(get_num_threads(threads))]
+
+    cmd.extend(extra_params)
+    if unpaired_fpath:
+        cmd.extend(['-U', unpaired_fpath])
+    if paired_fpaths:
+        cmd.extend(['-1', paired_fpaths[0], '-2', paired_fpaths[1]])
+
+    if 'ID' in readgroup.keys():
+        for key, value in readgroup.items():
+            if key not in ('ID', 'LB', 'SM', 'PL'):
+                msg = 'The readgroup header tag is not valid: {}'.format(key)
+                raise RuntimeError(msg)
+            if key == 'ID':
+                cmd.extend(['--rg-id', value])
+            else:
+                cmd.extend(['--rg', '{0}:{1}'.format(key, value)])
+
+    if log_fpath is None:
+        stderr = NamedTemporaryFile(suffix='.stderr')
+    else:
+        stderr = open(log_fpath, 'w')
+
+    hisat2 = popen(cmd, stderr=stderr, stdout=PIPE)
+    return hisat2
+
+
 def map_process_to_bam(map_process, bam_fpath, log_fpath=None,
                        tempdir=None):
     ''' It receives a mapping process that has a sam file in stdout and
@@ -283,7 +328,7 @@ def map_process_to_sortedbam(map_process, out_fpath, key='coordinate',
     cmd = ['java', '-jar', picard_jar, 'SortSam', 'I=/dev/stdin',
            'O=' + out_fpath, 'SO=' + key, 'TMP_DIR=' + tempdir,
            'VALIDATION_STRINGENCY=LENIENT']
-    #raw_input(' '.join(cmd))
+    # raw_input(' '.join(cmd))
     sort = popen(cmd, stdin=map_process.stdout, stderr=stderr)
     map_process.stdout.close()
     sort.communicate()
