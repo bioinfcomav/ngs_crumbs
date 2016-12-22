@@ -247,7 +247,7 @@ def map_with_bowtie2(index_fpath, paired_fpaths=None,
 
 def map_with_hisat2(index_fpath, paired_fpaths=None,
                     unpaired_fpath=None, readgroup=None, threads=None,
-                    log_fpath=None, extra_params=None):
+                    log_fhand=None, extra_params=None):
     '''It maps with bowtie2.
 
     paired_seqs is a list of tuples, in which each tuple are paired seqs
@@ -281,12 +281,7 @@ def map_with_hisat2(index_fpath, paired_fpaths=None,
             else:
                 cmd.extend(['--rg', '{0}:{1}'.format(key, value)])
 
-    if log_fpath is None:
-        stderr = NamedTemporaryFile(suffix='.stderr')
-    else:
-        stderr = open(log_fpath, 'w')
-
-    hisat2 = popen(cmd, stderr=stderr, stdout=PIPE)
+    hisat2 = popen(cmd, stderr=log_fhand, stdout=PIPE)
     return hisat2
 
 
