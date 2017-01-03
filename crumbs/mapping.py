@@ -248,7 +248,7 @@ def map_with_bowtie2(index_fpath, paired_fpaths=None,
 def map_with_hisat2(index_fpath, paired_fpaths=None,
                     unpaired_fpath=None, readgroup=None, threads=None,
                     log_fhand=None, extra_params=None):
-    '''It maps with bowtie2.
+    '''It maps with hisat2.
 
     paired_seqs is a list of tuples, in which each tuple are paired seqs
     unpaired_seqs is a list of files
