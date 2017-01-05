@@ -19,6 +19,8 @@ def _setup_argparse():
     parser.add_argument('-o', '--outfile', default=sys.stdout,
                         help='File to write the stats',
                         type=argparse.FileType('wt'))
+    parser.add_argument('--rm_dups', action='store_true', default=False,
+                        help='remove dups from stats')
     return parser
 
 
@@ -30,8 +32,9 @@ def _parse_args(parser):
     out_fhand = getattr(parsed_args, 'outfile')
     sample = parsed_args.sample
     min_mapq = parsed_args.min_mapq
+    rm_dups = parsed_args.rm_dups
     return {'in_fhands': in_fhands, 'sample': sample, 'min_mapq': min_mapq,
-            'out_fhand': out_fhand}
+            'out_fhand': out_fhand, 'rm_dups': rm_dups}
 
 
 def _select_rgs_by_sample(in_fhands, sample=None):
@@ -48,7 +51,8 @@ def _select_rgs_by_sample(in_fhands, sample=None):
     return selected_rgs
 
 
-def make_stats_for_sample(in_fhands, stats_fhand, sample=None, min_mapq=None):
+def make_stats_for_sample(in_fhands, stats_fhand, sample=None, min_mapq=None,
+                          rm_dups=False):
     selected_rgs = _select_rgs_by_sample(in_fhands, sample)
     if len(in_fhands) > 1:
         merge_cmd = ['samtools', 'merge', '-u', '-']
@@ -57,7 +61,9 @@ def make_stats_for_sample(in_fhands, stats_fhand, sample=None, min_mapq=None):
     else:
         merge_cmd = []
 
-    view_cmd = ['samtools', 'view', '-u', '-F', '1536']
+    flag = '1536' if rm_dups else '512'
+    view_cmd = ['samtools', 'view', '-u', '-F', flag]
+
     if min_mapq:
         view_cmd.extend(['-q', str(min_mapq)])
 
@@ -76,7 +82,10 @@ def make_stats_for_sample(in_fhands, stats_fhand, sample=None, min_mapq=None):
         view_cmd.append(in_fhands[0].name)
     view_cmd.append('|')
 
-    stat_cmd = ['samtools', 'stats', '-d', '-']
+    stat_cmd = ['samtools', 'stats']
+    if rm_dups:
+        stat_cmd.appen('-d')
+    stat_cmd.appen('-')
 
     cmd = merge_cmd + view_cmd + stat_cmd
     bash_fhand = NamedTemporaryFile()
@@ -109,7 +118,8 @@ def run():
     sample = args['sample']
     make_stats_for_sample(args['in_fhands'], stats_fhand,
                           sample=sample,
-                          min_mapq=args['min_mapq'])
+                          min_mapq=args['min_mapq'],
+                          rm_dup=args['rm_dups'])
 
 if __name__ == '__main__':
     run()
