@@ -8,16 +8,6 @@
     :license: BSD, see LICENSE for details.
 #}
 {% extends "basic_layout.html" %}
-{% block global_nav %}
-    <nav class="global_navigation">
-        <ul>
-            <li class="current_site_item" ><a href="https://bioinf.comav.upv.es">bioinf</a></li>
-            <li><a href="https://cucurbigene.upv.es">cucurbigene</a></li>
-            <li><a href="https://melogene.upv.es">melogene</a></li>
-        </ul>
-    </nav>
-{% endblock %}
-
 {% block header %}
     <header>
         <h1><a href="index.html">Bioinformatics at COMAV</a></h1>
@@ -39,8 +29,9 @@
             </li>
             <li><a href="/software.html">Software</a>
                 <ul>
-                    <li><a href="/seq_crumbs/index.html">seq_crumbs</a></li>
+
                     <li><a href="https://github.com/JoseBlanca/">Git</a></li><!--
+                    <li><a href="/seq_crumbs/index.html">seq_crumbs</a></li>
                     <li><a href="/ngs_backbone/index.html">ngs_backbone</a></li>
                     <li><a href="/clean_reads/index.html">clean_reads</a></li>
                     <li><a href="/sff_extract/index.html">sff_extract</a></li>
@@ -49,8 +40,13 @@
             </li>
             <li><a href="/databases.html">Databases</a>
                 <ul>
-                    <li><a href="http://www.melogene.net/">Melogene</a></li>
-                    <li><a href="http://www.cucurbigene.net/">Cucurbigene</a></li>
+                    <li><a href="https://melogene.upv.es">Melogene</a></li>
+                    <li><a href="https://cucurbigene.upv.es">Cucurbigene</a></li>
+               </ul>
+            </li>
+            <li><a ref=''>Downloads</a>
+                <ul>
+                    <li><a href="/downloads/zucchini">Zucchini</a></li>
                </ul>
             </li>
             <li><a href="/courses.html">Courses</a>
