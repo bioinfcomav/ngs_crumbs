@@ -476,7 +476,7 @@ def draw_per_sample_stats(vcf_stats, out_dir):
         missing_gt = tot_snps - ref_gt - alt_gt - het_gt
         missing_gts.append(missing_gt)
         missing_per_cent.append(missing_gt / tot_snps * 100)
-        het_per_cent = ((het_gt / (ref_gt + alt_gt + het_gt)) * 100)
+        het_per_cent = het_gt / (ref_gt + alt_gt + het_gt)
         hets_per_cent.append(het_per_cent)
         values_to_txt = [sample, ref_gt, alt_gt, het_gt, missing_gt,
                          (missing_gt / tot_snps), het_per_cent]
