@@ -30,7 +30,6 @@ from crumbs.utils.optional_modules import Reader
 # TODO: This must be optional
 from crumbs.bam.coord_transforms import ReadRefCoord
 
-
 # Missing docstring
 # pylint: disable=C0111
 
@@ -42,6 +41,7 @@ GT = 'genotype'
 
 
 class _AlleleDepths(object):
+
     def __init__(self, call, snp_caller):
         self._sum_alternatives = None
         self._al_counts = None
@@ -155,6 +155,7 @@ def choose_samples(record, sample_names):
 
 
 class VCFcomparisons(object):
+
     def __init__(self, vcf_path, samples=None):
         reader = Reader(filename=vcf_path)
         self.index = {}
@@ -211,6 +212,7 @@ DEPTHS = 'depths'
 
 
 class _AlleleCounts2D(object):
+
     def __init__(self):
         self._data = {}
         self._genotypes = {HOM_REF: set([(0, 0)]),
@@ -313,6 +315,7 @@ class _AlleleCounts2D(object):
 
 
 class VcfStats(object):
+
     def __init__(self, vcf_fpath, gq_threshold=None, dp_threshold=100,
                  min_calls_for_pop_stats=DEF_MIN_CALLS_FOR_POP_STATS,
                  remarkable_coverages=None, window_size=WINDOWS_SIZE):
