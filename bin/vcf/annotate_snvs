@@ -110,6 +110,11 @@ def _manage_mappers(reader, filters_in_conf):
                                                   mapper.description)
         if mapper.info:
             info = mapper.info
+            if 'source' not in info:
+                info['source'] = ''
+            if 'version' not in info:
+                info['version'] = ''
+            print(info)
             reader.infos[info['id']] = _Info(**info)
 
     item_wise_filters = []

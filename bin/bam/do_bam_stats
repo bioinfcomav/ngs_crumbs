@@ -84,8 +84,8 @@ def make_stats_for_sample(in_fhands, stats_fhand, sample=None, min_mapq=None,
 
     stat_cmd = ['samtools', 'stats']
     if rm_dups:
-        stat_cmd.appen('-d')
-    stat_cmd.appen('-')
+        stat_cmd.append('-d')
+    stat_cmd.append('-')
 
     cmd = merge_cmd + view_cmd + stat_cmd
     bash_fhand = NamedTemporaryFile()
@@ -119,7 +119,7 @@ def run():
     make_stats_for_sample(args['in_fhands'], stats_fhand,
                           sample=sample,
                           min_mapq=args['min_mapq'],
-                          rm_dup=args['rm_dups'])
+                          rm_dups=args['rm_dups'])
 
 if __name__ == '__main__':
     run()

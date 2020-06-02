@@ -103,7 +103,7 @@ def run():
                     xlabel=xlabel, ylabel=ylabel, titles=titles,
                     plots_per_chart=PLOTS_PER_CHAR, num_cols=1,
                     xmin=args['xlim_left'], xmax=args['xlim_rigth'],
-                    ylimits=args['ylimits'], ylog_scale=True)
+                    ylimits=args['ylimits'], ylog_scale=False)
 
     write_coverage_stats(coverages, 'sample', args['out_fhand'],
                          args['genome_size'])

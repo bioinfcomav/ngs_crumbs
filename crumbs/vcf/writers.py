@@ -41,6 +41,7 @@ IUPAC_CODES = {tuple(sorted(alleles)): code
 
 DEF_MAPMAKER_POP = 'f2 backcross'
 
+
 def _get_unicode_alleles(snv):
     return [unicode(allele) for allele in snv.alleles]
 

@@ -16,6 +16,8 @@
 from __future__ import division
 from operator import itemgetter
 
+import math
+
 from crumbs.seq.seq import get_name, get_length
 from crumbs.seq.seqio import read_seqs
 from crumbs.statistics import IntCounter, IntBoxplot
@@ -389,7 +391,11 @@ class VcfStats(object):
 
     def _add_snv_qual(self, snp):
         snv_qual = snp.qual
-        if snv_qual is not None:
+        if snv_qual is None:
+            pass
+        elif math.isinf(snv_qual):
+            self._snv_counters[SNV_QUALS][99999] += 1
+        elif snv_qual is not None:
             self._snv_counters[SNV_QUALS][int(round(snv_qual))] += 1
 
     def _add_snv_density(self, snp):

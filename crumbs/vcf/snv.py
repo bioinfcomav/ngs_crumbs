@@ -806,9 +806,11 @@ class Call(object):
 
     @staticmethod
     def _to_int(allele):
+        if allele is None:
+            return None
         try:
             return int(allele)
-        except ValueError:
+        except (ValueError, TypeError):
             if allele == MISSING_ALLELE_CHAR:
                 return None
             raise

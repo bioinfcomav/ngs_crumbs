@@ -267,7 +267,7 @@ def draw_call_density(vcf_stats, out_dir, n_bins=100, rc_max=100,
         xi = linspace(0, rc_max, 100)
         yi = linspace(0, ac_max, 100)
 
-        zi = griddata(x, y, gt_counts, xi, yi)
+        zi = griddata(x, y, gt_counts, xi, yi, interp='linear')
 
         cs = axes.contourf(xi, yi, zi)
         color_axes = make_axes(axes)[0]
@@ -282,7 +282,7 @@ def draw_call_density(vcf_stats, out_dir, n_bins=100, rc_max=100,
 
         x, y, quals = zip(*ac2d.get_avg_gt_quals(gt_type, rc_max=rc_max,
                                                  ac_max=ac_max))
-        zi = griddata(x, y, quals, xi, yi)
+        zi = griddata(x, y, quals, xi, yi, interp='linear')
         cs = axes2.contourf(xi, yi, zi, **kwargs)
         color_axes = make_axes(axes2)[0]
         Colorbar(color_axes, cs)
