@@ -451,7 +451,7 @@ def draw_het_by_snp(vcf_stats, out_dir):
 
 def draw_per_sample_stats(vcf_stats, out_dir):
     stats_fh = open(join(out_dir, 'stats_per_sample.txt'), 'w')
-    header = "Sample\tNumHomREF\tNumHomALT\tNumHET\tNumMissing\tPercentMissing"
+    header = "Sample\tNumHomREF\tNumHomALT\tNumHET\tNumMissing\tPercentMissing\tPercentHet."
     stats_fh.write(header + '\n')
     stats_fh.write("-" * len(header) + '-------' + '\n')
     samples = []
@@ -461,6 +461,7 @@ def draw_per_sample_stats(vcf_stats, out_dir):
     het_gts = []
     missing_gts = []
     missing_per_cent = []
+    hets_per_cent = []
     tot_snps = vcf_stats.called_snvs
     for sample in vcf_stats.samples:
         samples.append(sample)
@@ -475,9 +476,11 @@ def draw_per_sample_stats(vcf_stats, out_dir):
         missing_gt = tot_snps - ref_gt - alt_gt - het_gt
         missing_gts.append(missing_gt)
         missing_per_cent.append(missing_gt / tot_snps * 100)
+        het_per_cent = ((het_gt / (ref_gt + alt_gt + het_gt)) * 100)
+        hets_per_cent.append(het_per_cent)
         values_to_txt = [sample, ref_gt, alt_gt, het_gt, missing_gt,
-                         (missing_gt / tot_snps)]
-        stats_fh.write("{}\t{}\t{}\t{}\t{}\t{:.2%}\n".format(*values_to_txt))
+                         (missing_gt / tot_snps), het_per_cent]
+        stats_fh.write("{}\t{}\t{}\t{}\t{}\t{:.2%}\t{:.2%}\n".format(*values_to_txt))
 
     total_missinpcent = sum(missing_gts) / (len(samples) * tot_snps)
     stats_fh.write('TOTAL\t{}\t{}\t{}\t{}\t{:.2%}\n'.format(sum(ref_gts),
@@ -508,7 +511,7 @@ def draw_per_sample_stats(vcf_stats, out_dir):
         axes = fig.add_subplot(num_plots, 1, plots_done)
         plots_done += 1
         axes.bar(left, height)
-        axes.set_title('Heterocigosities per sample')
+        axes.set_title('Percentaje Het. per sample')
         axes.set_ylabel('Obs. Het.')
         axes.tick_params(axis='x', which='both', bottom='off', top='off',
                          labelbottom='off')
@@ -582,7 +585,7 @@ def draw_missing_data(vcf_stats, out_dir):
     n_samples = len(vcf_stats.samples)
     sample_numbers = range(0, n_samples + 1)
     t_fhand.write('dp/n_sm\t' + '\t'.join([str(i) for i in sample_numbers])
-                  + '\n')
+                  +'\n')
 
     for depth, counter in missing_calcs.items():
         line = [str(depth)]
